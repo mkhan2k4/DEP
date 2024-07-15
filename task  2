@@ -1,0 +1,113 @@
+TASK 2
+PROGRAM 
+ #include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+class contact
+{
+	public:
+		string n,phoneno;
+};
+void add_cont(vector<contact>& contacts)
+{
+	contact newcont;
+	cout<<"\nENTER NAME :  ";
+	getline(cin,newcont.n);
+	cout<<"\nENTER PHONE NUMBER :  ";
+	getline(cin,newcont.phoneno);
+	cout<<"\n *** CONTACT ADDED SUCCESSFULLY *** ";
+}
+void view_cont(const vector<contact>& contacts)
+{
+	if (contacts.empty())
+	{
+		cout<<"\n *** NO CONTACT FOUND! *** ";
+		return;
+	}
+	cout<<"\n *** CONTACT LIST *** ";
+	for(int i=0;i<contacts.size();++i)
+	{
+		cout<<"\n NAME :  "<<contacts[i].n;
+		cout<<"\n PHONE NO :  "<<contacts[i].phoneno;
+	}
+}
+void  del_cont( vector<contact>& contacts)
+{
+		if (contacts.empty())
+	{
+		cout<<"\n *** NO CONTACT FOUND! *** ";
+		return;
+	}
+	string n;
+	cout<<"\n ENTER NAME OF  CONTACT TO DELETE: ";
+	getline(cin,n);
+	int itd=-1;
+	for(int i=0;i<contacts.size();++i)
+	{
+		if (contacts[i].n==n)
+		{
+			itd=i; break;
+		}
+	}
+	if (itd != -1)
+		{
+		contacts.erase(contacts.begin() + itd);	
+		cout<<"\n *** CONTACTS DELETED SUCCESSFULLY *** ";
+		}
+		else
+			cout<<"\n *** NO CONTACT FOUND! *** ";
+}
+int main ()
+{
+	vector<contact>  contacts;
+	int choice;
+	while(true)
+	{
+		cout<<"\n ***  CONTACT MANAGEMENT SYSTEM *** ";
+	    cout<<"\n 1.  ADD CONTACT ";
+	    cout<<"\n 2.  VIEW CONTACT ";
+	    cout<<"\n 3.  DELETE CONTACT ";
+	    cout<<"\n 4.  EXIT ";
+	    cout<<"\n ENTER YOUR CHOICE ";
+	    cin>>choice;
+	    cin.ignore();
+	    switch (choice)
+	    {
+	    	case 1:  add_cont(contacts); break;
+	    	case 2:  view_cont(contacts); break;
+	    	case 3:  del_cont(contacts); break;
+	    	case 4:  cout<<"\n*** EXITING *** "; return 0;
+	    	default: cout<<"\n*** INVALID CHOICE! ***";
+		}
+	}
+    return 0;	
+}
+OUTPUT:
+ 1.  ADD CONTACT
+ 2.  VIEW CONTACT
+ 3.  DELETE CONTACT
+ 4.  EXIT
+ ENTER YOUR CHOICE 1
+
+ENTER NAME :  xyz
+
+ENTER PHONE NUMBER :  0312456456
+
+ *** CONTACT ADDED SUCCESSFULLY ***
+ ***  CONTACT MANAGEMENT SYSTEM ***
+ 1.  ADD CONTACT
+ 2.  VIEW CONTACT
+ 3.  DELETE CONTACT
+ 4.  EXIT
+ ENTER YOUR CHOICE 2
+
+ *** NO CONTACT FOUND! ***
+ ***  CONTACT MANAGEMENT SYSTEM ***
+ 1.  ADD CONTACT
+ 2.  VIEW CONTACT
+ 3.  DELETE CONTACT
+ 4.  EXIT
+ ENTER YOUR CHOICE 4
+
+*** EXITING ***
