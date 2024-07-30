@@ -1,0 +1,85 @@
+TASK 4
+PROGRAM
+#include<iostream>
+#include<thread>
+#include<vector>
+#include<cstring>
+#include<netinet/in.h>
+#include<unistd.h>
+#include<fstream>
+#include<sstream>
+using namespace std;
+#define PORT 8080
+
+void handle_client(int client_socket) {
+	char buffer[1024]={0};
+ 	read(client_socket, buffer, 1024);
+ 	std::istringstream request (buffer);
+ 	std::string method, path, version; 
+	request >> method >> path >> version;
+	if (path[0]== '/') {
+		path=path.substr(1);
+	} 
+	if (path.empty())
+	{
+	 path ="index.html";	
+	 } 
+
+ 	std::ifstream file(path);
+
+	if (file) {
+		
+
+	std::stringstream response;
+	response << "HTTP/1.1 200 OK\nContent-Type: text/html\n\n" << file.rdbuf();
+	std::string response_str = response.str();
+	send(client_socket, response_str.c_str(), response_str.length(), 0);
+	}
+else {
+	const char *not_found="HTTP/1.1 404 Not Found\nContent-Type: text/html\nContent-Lenght: 9\n\nNot Found";
+	send(client_socket,not_found , strlen(not_found), 0);
+}
+close(client_socket);
+}
+int main ()
+{
+	int sever_fd,client_socket;
+	struct sockaddr_in address;
+	int apl=1;
+	int addrlen=sizeof(address);
+	if((sever_fd =socket(AP_INET,SOCK_STREAM,0))==0){
+		perror("socket failed");
+		exit(EXIT_FAILURE);
+	}
+	if(setsockopt(sever_fd ,SOL_SOCKET,SO_RCUSCADOR|SO_RCUSCPORT,&opt,sizeof(opt))){
+		perror("setsockopt");
+		exit(EXIT_FAILURE);
+	}
+	 address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(8080); // Port number
+
+    // Bind the socket to the address
+    if (bind(server_socket, (struct sockaddr *)&address, sizeof(address)) < 0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_socket, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    while (true) {
+        if ((new_socket = accept(server_socket, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0) {
+            perror("accept");
+            exit(EXIT_FAILURE);
+        }
+
+        // Create a new thread to handle the client
+        std::thread t(handle_client, new_socket);
+        t.detach();
+    }
+
+    return 0;
+}
